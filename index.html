@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RUSTED FRIEND // LINKS</title>
+<meta name="description" content="I am Isaac, Maker of things. All my links in one place.">
+<meta property="og:title" content="RUSTED FRIEND // LINKS">
+<meta property="og:description" content="I am Isaac, Maker of things. All my links in one place.">
+<meta name="theme-color" content="#0A0704">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%230A0704'/%3E%3Ccircle cx='16' cy='16' r='11' fill='none' stroke='%23FFB000' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%23FFB000'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;700&display=swap" rel="stylesheet">
+<!--
+=====================================================================
+ EDIT HERE: name, tagline and links live in the CONFIG block in the
+ <script> at the bottom. Nothing else needs touching.
+
+ The wireframe is built from an edge list (MODEL_SEGMENTS). To drop in
+ a more detailed BETL model later, replace buildModel() with a list of
+ [[x,y,z],[x,y,z],"class"] edges in metres (x forward, y left, z up).
+ Classes: hull, wheel, faint, head, headbox, lidar, horn.
+=====================================================================
+-->
+<style>
+:root{
+  --amber:#FFB000;
+  --amber-hi:#FFD37A;
+  --amber-mid:rgba(255,176,0,.55);
+  --amber-dim:rgba(255,176,0,.28);
+  --amber-ghost:rgba(255,176,0,.10);
+  --red:#FF5A2B;
+  --bg:#0A0704;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg);overflow-x:hidden}
+body{
+  min-height:100vh;min-height:100dvh;
+  background:var(--bg);
+  color:var(--amber);
+  font-family:"IBM Plex Mono","SFMono-Regular",Menlo,Consolas,monospace;
+  font-weight:700;
+  font-size:17px;
+  line-height:1.4;
+  letter-spacing:.03em;
+  text-shadow:0 0 4px rgba(255,176,0,.6),0 0 14px rgba(255,140,0,.25);
+  display:flex;flex-direction:column;
+}
+
+/* ---- CRT overlays ---- */
+.scan{position:fixed;inset:0;pointer-events:none;z-index:90;
+  background:repeating-linear-gradient(to bottom,rgba(0,0,0,0) 0 3px,rgba(0,0,0,.28) 3px 5px)}
+.vig{position:fixed;inset:0;pointer-events:none;z-index:91;
+  background:radial-gradient(ellipse at center,rgba(0,0,0,0) 55%,rgba(0,0,0,.7) 100%)}
+.flick{position:fixed;inset:0;pointer-events:none;z-index:92;background:rgba(255,176,0,.02);
+  animation:fl 6s steps(1) infinite}
+@keyframes fl{0%,97%{opacity:0}97.5%{opacity:1}98%{opacity:0}98.6%{opacity:.7}99%{opacity:0}}
+
+/* ---- chrome ---- */
+header,footer{display:flex;gap:16px;align-items:baseline;padding:10px 18px;
+  white-space:nowrap;overflow:hidden;font-size:14px}
+header{border-bottom:3px solid var(--amber-dim)}
+footer{border-top:3px solid var(--amber-dim);margin-top:auto}
+.tag{color:var(--amber-hi);font-weight:700;letter-spacing:.14em}
+.mut{color:var(--amber-mid)}
+.spacer{flex:1}
+.ok::before{content:"● ";animation:bl 1.4s steps(1) infinite}
+@keyframes bl{50%{opacity:.3}}
+
+main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:40px 18px 40px;
+  display:flex;flex-direction:column;justify-content:center}
+
+/* ---- avatar ---- */
+/* the reflection sits behind everything and doesn't take up layout space;
+   fixed, so it stays put while the crisp page scrolls over it */
+.avatar{position:fixed;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:min(1100px,150vmin);aspect-ratio:1;z-index:0;pointer-events:none}
+header,main,footer{position:relative;z-index:1}
+.avatar svg{width:100%;height:100%;display:block;overflow:visible}
+
+.id{text-align:center;margin-bottom:26px}
+.id h1{font-size:30px;letter-spacing:.24em;color:var(--amber-hi);font-weight:700;
+  margin-left:.24em} /* balance trailing letter-spacing */
+.id p{color:var(--amber-mid);font-size:14px;letter-spacing:.12em;margin-top:6px;font-weight:500}
+
+/* ---- links ---- */
+.ptitle{color:var(--amber-hi);letter-spacing:.18em;font-size:13px;
+  border-bottom:2px solid var(--amber-dim);padding-bottom:5px;margin-bottom:12px;
+  display:flex;justify-content:space-between}
+ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+a.lnk{
+  display:flex;align-items:center;gap:12px;
+  min-height:56px;padding:12px 16px;
+  border:2px solid var(--amber-dim);
+  color:var(--amber);text-decoration:none;
+  background:rgba(10,7,4,.55); /* dark glass so the reflection doesn't fight the text */
+  transition:background .12s,border-color .12s,color .12s;
+}
+a.lnk .k{letter-spacing:.14em;white-space:nowrap}
+a.lnk .k::before{content:"› ";color:var(--amber-mid)}
+a.lnk .dots{flex:1;border-bottom:2px dotted var(--amber-dim);transform:translateY(-4px);min-width:0}
+a.lnk .v{color:var(--amber-hi);font-weight:500;font-size:15px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;min-width:0}
+a.lnk:hover,a.lnk:focus-visible{
+  background:var(--amber-ghost);border-color:var(--amber);outline:none}
+a.lnk:hover .k::before,a.lnk:focus-visible .k::before{content:"» ";color:var(--amber-hi)}
+a.lnk:active{background:rgba(255,176,0,.2)}
+
+/* reflection slowly swells and fades, like ambient light shifting */
+.refl{animation:breathe 9s ease-in-out infinite}
+@keyframes breathe{0%,100%{opacity:1}50%{opacity:.6}}
+/* QR popup */
+dialog{margin:auto;max-width:min(380px,90vw);padding:16px;background:var(--bg);color:var(--amber);
+  border:3px solid var(--amber);box-shadow:0 0 24px rgba(255,176,0,.25);font:inherit}
+dialog::backdrop{background:rgba(10,7,4,.8)}
+dialog .ptitle{align-items:baseline}
+dialog .x{background:none;border:none;color:var(--amber-hi);font:inherit;font-size:13px;
+  letter-spacing:.1em;cursor:pointer;text-shadow:inherit}
+.qrwrap{background:#fff;padding:10px}
+.qrwrap img{display:block;width:100%;height:auto}
+dialog p{font-size:11px;letter-spacing:.08em;margin-top:10px;text-align:center;font-weight:500}
+.cursor::after{content:"█";animation:bl 1s steps(1) infinite;margin-left:2px}
+
+@media (max-width:420px){
+  body{font-size:15px}
+  .id h1{font-size:24px}
+  a.lnk .v{font-size:13px}
+  a.lnk{gap:8px;padding:12px 12px}
+  header .hide-sm{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  .flick{display:none}
+  .ok::before,.cursor::after,.refl{animation:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <span class="tag" id="hdr-name">RUSTED FRIEND</span>
+  <span class="mut">// LINKS</span>
+  <span class="spacer"></span>
+  <span class="mut hide-sm">SYS</span> <span class="hide-sm">BEETLE</span>
+  <span class="mut">UPT</span> <span id="upt">00:00:00</span>
+</header>
+
+<main>
+  <div class="avatar" aria-hidden="true">
+    <svg id="svg" viewBox="0 0 400 400"></svg>
+  </div>
+
+  <div class="id">
+    <h1 id="name">RUSTED FRIEND</h1>
+    <p id="tagline" class="cursor">I AM ISAAC, MAKER OF THINGS.</p>
+  </div>
+
+  <div class="ptitle"><span>CHANNELS</span><span class="mut" id="count">00</span></div>
+  <ul id="links"></ul>
+</main>
+
+<footer>
+  <span class="mut">LINK</span> <span class="ok">OK</span>
+  <span class="spacer"></span>
+  <span class="mut" id="yr"></span>
+</footer>
+
+<dialog id="qr">
+  <div class="ptitle"><span></span><button class="x" aria-label="Close">[ X ]</button></div>
+  <div class="qrwrap"><img alt=""></div>
+  <p class="mut">ON MOBILE: SCREENSHOT, THEN OPEN IT FROM THE APP'S SCANNER</p>
+</dialog>
+
+<div class="scan"></div><div class="vig"></div><div class="flick"></div>
+
+<script>
+/* ======================= CONFIG — edit here ======================= */
+const NAME    = "RUSTED FRIEND";
+const TAGLINE = "I AM ISAAC, MAKER OF THINGS.";
+const LINKS = [
+  // label shown on the left, handle on the right, url it opens.
+  // Use qr:"file.png" instead of url to pop up a QR code (for apps with no web link).
+  { label:"GITHUB",    handle:"@RFisaac",              url:"https://github.com/RFisaac" },
+  { label:"YOUTUBE",   handle:"@rustedfriend",         url:"https://www.youtube.com/@rustedfriend" },
+  { label:"INSTAGRAM", handle:"@rustedfriend",         url:"https://www.instagram.com/rustedfriend/" },
+  { label:"X",         handle:"@Rusted_Friend",        url:"https://x.com/Rusted_Friend" },
+  { label:"REDNOTE",   handle:"小红书",                 url:"https://www.xiaohongshu.com/user/profile/6ae6626d000000001a00c400" },
+  { label:"WECHAT",    handle:"SCAN QR",               qr:"wechat-qr.png" },
+  // WHATSAPP: add back once usernames go live, e.g.
+  // { label:"WHATSAPP",  handle:"@rustedfriend",        url:"<username link>" },
+  { label:"LINKEDIN",  handle:"in/isaac-doubek",       url:"https://www.linkedin.com/in/isaac-doubek-59024a161/" },
+  { label:"EMAIL",     handle:"Isaac@rustedfriend.com",url:"mailto:Isaac@rustedfriend.com" },
+];
+/* ================================================================= */
+
+document.getElementById("name").textContent=NAME;
+document.getElementById("hdr-name").textContent=NAME;
+document.getElementById("tagline").textContent=TAGLINE;
+document.title=`${NAME} // LINKS`;
+document.getElementById("yr").textContent=`© ${new Date().getFullYear()} ${NAME}`;
+document.getElementById("count").textContent=String(LINKS.length).padStart(2,"0");
+
+const ul=document.getElementById("links");
+LINKS.forEach(l=>{
+  const li=document.createElement("li");
+  const a=document.createElement("a");
+  a.className="lnk";
+  if(l.qr){
+    a.href="#"; a.addEventListener("click",e=>{e.preventDefault(); showQR(l);});
+  }else{
+    a.href=l.url;
+    if(!l.url.startsWith("mailto:")){a.target="_blank"; a.rel="noopener me";}
+  }
+  a.innerHTML=`<span class="k"></span><span class="dots"></span><span class="v"></span>`;
+  a.querySelector(".k").textContent=l.label;
+  a.querySelector(".v").textContent=l.handle;
+  li.appendChild(a); ul.appendChild(li);
+});
+
+/* QR popup */
+const dlg=document.getElementById("qr");
+function showQR(l){
+  dlg.querySelector(".ptitle span").textContent=`${l.label} // SCAN TO ADD`;
+  const img=dlg.querySelector("img"); img.src=l.qr; img.alt=`${l.label} QR code`;
+  dlg.showModal();
+}
+dlg.addEventListener("click",e=>{ if(e.target===dlg||e.target.closest(".x")) dlg.close(); });
+
+/* uptime since page open — pure flavour */
+const t0=Date.now();
+setInterval(()=>{
+  const s=Math.floor((Date.now()-t0)/1000);
+  const p=n=>String(n).padStart(2,"0");
+  document.getElementById("upt").textContent=`${p(Math.floor(s/3600))}:${p(Math.floor(s/60)%60)}:${p(s%60)}`;
+},1000);
+
+/* ======================= WIREFRAME BEETLE ======================= */
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById("svg");
+const CX=200, CY=200, R=150, SCALE=205;
+const el=(n,a)=>{const e=document.createElementNS(NS,n);for(const k in a)e.setAttribute(k,a[k]);return e;};
+
+/* static ring + ticks (part of the reflected scene) */
+const ringG=el("g",{});
+ringG.appendChild(el("circle",{cx:CX,cy:CY,r:R,fill:"none",stroke:"var(--amber)","stroke-width":3}));
+ringG.appendChild(el("circle",{cx:CX,cy:CY,r:R+8,fill:"none",stroke:"var(--amber-dim)","stroke-width":2}));
+ringG.appendChild(el("circle",{cx:CX,cy:CY,r:R-13,fill:"none",stroke:"var(--amber-ghost)","stroke-width":1.5,"stroke-dasharray":"3 8"}));
+for(let a=0;a<360;a+=5){
+  const maj=a%30===0, rad=a*Math.PI/180, r0=R+2, r1=R+(maj?11:6);
+  ringG.appendChild(el("line",{x1:CX+Math.cos(rad)*r0,y1:CY+Math.sin(rad)*r0,
+    x2:CX+Math.cos(rad)*r1,y2:CY+Math.sin(rad)*r1,
+    stroke:maj?"var(--amber-mid)":"var(--amber-ghost)","stroke-width":maj?2.6:1.5}));
+}
+const defs=el("defs",{}), cp=el("clipPath",{id:"vp"});
+cp.appendChild(el("circle",{cx:CX,cy:CY,r:R-1})); defs.appendChild(cp); svg.appendChild(defs);
+
+/* geometry (same model as the HUD) */
+function buildModel(spin){
+  const seg=[];
+  const L=.30, W=.24, H=.10, WR=.085;
+  const box=(cx,cy,cz,hx,hy,hz,c)=>{
+    const p=[];
+    for(const sx of[-1,1])for(const sy of[-1,1])for(const sz of[-1,1])p.push([cx+sx*hx,cy+sy*hy,cz+sz*hz]);
+    [[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]]
+      .forEach(([a,b])=>seg.push([p[a],p[b],c]));
+  };
+  box(0,0,0,L,W,H,"hull");
+  seg.push([[-L,-W,H],[L,W,H],"faint"],[[-L,W,H],[L,-W,H],"faint"]);
+  box(.02,0,H+.03,.20,.17,.005,"faint");
+
+  /* wheels */
+  [[L-.06,W-.02],[L-.06,-(W-.02)],[-(L-.06),W-.02],[-(L-.06),-(W-.02)]].forEach(([mx,my])=>{
+    const P=(ang,off)=>[mx+Math.cos(ang)*WR, my+off, -H+Math.sin(ang)*WR];
+    for(let i=0;i<8;i++){
+      const a0=i/8*2*Math.PI, a1=(i+1)/8*2*Math.PI;
+      seg.push([P(a0,-.022),P(a1,-.022),"wheel"],[P(a0,.022),P(a1,.022),"wheel"]);
+      if(i%2===0) seg.push([P(a0,-.022),P(a0,.022),"wheel"]);
+    }
+    seg.push([[mx,my,-H+WR],[mx,my,0],"faint"]);
+  });
+
+  /* lidar scan stage */
+  const STAGE_Z=H+.030, OFF=.030, cs=Math.cos(spin), sn=Math.sin(spin);
+  const S=(x,y,z)=>[x*cs-y*sn, x*sn+y*cs, z];
+  seg.push([[0,0,H],[0,0,STAGE_Z],"faint"]);
+  const BR=.062;
+  for(let i=0;i<10;i++){
+    const a0=i/10*2*Math.PI, a1=(i+1)/10*2*Math.PI;
+    seg.push([S(Math.cos(a0)*BR,Math.sin(a0)*BR,STAGE_Z),S(Math.cos(a1)*BR,Math.sin(a1)*BR,STAGE_Z),"faint"]);
+  }
+  const bx=.052, by=.006, bz=.055, bcz=STAGE_Z+bz, c=[];
+  for(const sx of[-1,1])for(const sy of[-1,1])for(const sz of[-1,1])c.push(S(sx*bx,sy*by,bcz+sz*bz));
+  [[0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7]]
+    .forEach(([a,b])=>seg.push([c[a],c[b],"lidar"]));
+  const CR=.040, CH=.026, N=12, CZ=bcz+.012;
+  const ring=k=>{const r=[];for(let i=0;i<N;i++){const a=i/N*2*Math.PI;r.push(S(OFF+Math.cos(a)*CR,k*CH,CZ+Math.sin(a)*CR));}return r;};
+  const r0=ring(-1), r1=ring(1);
+  for(let i=0;i<N;i++){
+    seg.push([r0[i],r0[(i+1)%N],"lidar"],[r1[i],r1[(i+1)%N],"lidar"]);
+    if(i%3===0) seg.push([r0[i],r1[i],"lidar"]);
+  }
+  seg.push([S(OFF,0,CZ),S(OFF+CR*1.5,0,CZ),"head"]);
+
+  /* head + horns */
+  const HD_X=L+.058, HD_Z=.030, hx=.062, hy=.086, hz=.066;
+  box(HD_X,0,HD_Z,hx,hy,hz,"headbox");
+  for(const sy of[-1,1])for(const sz of[-1,1])
+    seg.push([[L,sy*hy*.7,HD_Z+sz*hz*.45],[HD_X-hx,sy*hy*.7,HD_Z+sz*hz*.45],"faint"]);
+  const X=HD_X, Z=HD_Z-hz;
+  seg.push(
+    [[X,0,Z],[X+.10,0,Z-.030],"horn"],
+    [[X+.10,0,Z-.030],[X+.23,.105,Z-.012],"horn"],
+    [[X+.10,0,Z-.030],[X+.23,-.105,Z-.012],"horn"],
+    [[X,0,Z-.018],[X+.10,0,Z-.048],"horn"],
+    [[X+.10,0,Z-.048],[X+.23,.105,Z-.030],"horn"],
+    [[X+.10,0,Z-.048],[X+.23,-.105,Z-.030],"horn"],
+    [[X+.23,.105,Z-.012],[X+.23,.105,Z-.030],"horn"],
+    [[X+.23,-.105,Z-.012],[X+.23,-.105,Z-.030],"horn"],
+    [[X,0,Z],[X,0,Z-.018],"horn"]
+  );
+  return seg;
+}
+
+const STROKE={hull:["var(--amber)",2.2],wheel:["var(--amber-mid)",1.7],
+  faint:["var(--amber-dim)",1.5],head:["var(--amber-hi)",2.5],
+  headbox:["var(--amber)",2.4],lidar:["var(--amber-mid)",1.9],horn:["var(--amber-hi)",4.2]};
+
+/* projection: isometric camera, model spun about its own centre */
+const ISO_YAW=Math.PI/4, ISO_PITCH=-Math.asin(Math.tan(Math.PI/6));
+const MODEL_CX=.14, MODEL_CZ=.02;   // recentre so it spins in place
+function rot(p,r,pi,y){
+  let [x,yy,z]=p, t;
+  t=yy*Math.cos(r)-z*Math.sin(r); z=yy*Math.sin(r)+z*Math.cos(r); yy=t;
+  t=x*Math.cos(pi)+z*Math.sin(pi); z=-x*Math.sin(pi)+z*Math.cos(pi); x=t;
+  t=x*Math.cos(y)-yy*Math.sin(y); yy=x*Math.sin(y)+yy*Math.cos(y); x=t;
+  return [x,yy,z];
+}
+function project(p,yaw,pitch){
+  let q=rot([p[0]-MODEL_CX,p[1],p[2]-MODEL_CZ],0,pitch,yaw);
+  q=rot(q,0,ISO_PITCH,ISO_YAW);
+  return [CX+q[1]*SCALE, CY-q[2]*SCALE];
+}
+
+/* ---- "reflection" treatment ----
+   The beetle reads as if it's on another screen behind the viewer,
+   caught in this one's glass: mirrored, soft, dim, with a faint
+   double image from the glass's two surfaces. Tune REFLECT to taste. */
+const REFLECT={ blur:1.6, opacity:.34, ghostOpacity:.16, ghostDx:5, ghostDy:3, ghostBlur:3.2 };
+const mkBlur=(id,sd)=>{const f=el("filter",{id,x:"-20%",y:"-20%",width:"140%",height:"140%"});
+  f.appendChild(el("feGaussianBlur",{stdDeviation:sd})); defs.appendChild(f);};
+mkBlur("soft",REFLECT.blur); mkBlur("softer",REFLECT.ghostBlur);
+
+/* glare sweep across the glass, drawn under the ring so the ring stays crisp */
+const glare=el("linearGradient",{id:"glare",x1:"0",y1:"0",x2:"1",y2:"1"});
+[["0","rgba(255,211,122,0)"],[".38","rgba(255,211,122,0)"],[".46","rgba(255,211,122,.07)"],
+ [".52","rgba(255,211,122,0)"],["1","rgba(255,211,122,0)"]]
+  .forEach(([o,c])=>glare.appendChild(el("stop",{offset:o,"stop-color":c})));
+defs.appendChild(glare);
+
+const mirror=`translate(${2*CX},0) scale(-1,1)`;
+/* whole HUD (ring + beetle) is the "other screen"; only the glare is on this glass */
+const scene=el("g",{id:"scene",filter:"url(#soft)",opacity:REFLECT.opacity});
+scene.appendChild(ringG);
+const clip=el("g",{"clip-path":"url(#vp)"}); scene.appendChild(clip);
+const g=el("g",{}); clip.appendChild(g);
+const ghost=el("use",{href:"#scene",transform:`translate(${REFLECT.ghostDx},${REFLECT.ghostDy})`,
+  filter:"url(#softer)",opacity:REFLECT.ghostOpacity});
+const refl=el("g",{transform:mirror,class:"refl"});
+refl.appendChild(ghost); refl.appendChild(scene); svg.appendChild(refl);
+svg.appendChild(el("circle",{cx:CX,cy:CY,r:R+14,fill:"url(#glare)"}));
+const pool=[];
+function draw(yaw,pitch,spin){
+  const segs=buildModel(spin);
+  while(pool.length<segs.length){
+    const ln=el("line",{"stroke-linecap":"round"}); g.appendChild(ln); pool.push(ln);
+  }
+  segs.forEach(([a,b,c],i)=>{
+    const p0=project(a,yaw,pitch), p1=project(b,yaw,pitch), s=STROKE[c]||STROKE.faint, ln=pool[i];
+    ln.setAttribute("x1",p0[0].toFixed(1)); ln.setAttribute("y1",p0[1].toFixed(1));
+    ln.setAttribute("x2",p1[0].toFixed(1)); ln.setAttribute("y2",p1[1].toFixed(1));
+    ln.setAttribute("stroke",s[0]); ln.setAttribute("stroke-width",s[1]);
+  });
+  for(let i=segs.length;i<pool.length;i++) pool[i].setAttribute("stroke","none");
+}
+
+const still=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if(still){
+  draw(Math.PI*1.15,0,0.6);
+}else{
+  const start=performance.now();
+  (function loop(now){
+    const t=(now-start)/1000;
+    draw(Math.PI+t*0.35, Math.sin(t*0.6)*0.05, t*1.6);
+    requestAnimationFrame(loop);
+  })(start);
+}
+</script>
+</body>
+</html>
